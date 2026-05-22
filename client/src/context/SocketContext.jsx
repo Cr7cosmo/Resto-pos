@@ -24,7 +24,7 @@ export const SocketProvider = ({ children }) => {
     });
 
     return () => {
-      socket.disconnect();
+      socket.off();
     };
   }, []);
 

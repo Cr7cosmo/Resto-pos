@@ -1,13 +1,13 @@
 import { io } from "socket.io-client";
 
-const SOCKET_URL = "http://10.96.252.46:5001";
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
 const socket = io(SOCKET_URL, {
   autoConnect: false,
   reconnection: true,
-  reconnectionDelay: 1000,
   reconnectionAttempts: Infinity,
-  transports: ["websocket", "polling"],
+  reconnectionDelay: 1000,
+  transports: ["websocket"],
 });
 
 export default socket;

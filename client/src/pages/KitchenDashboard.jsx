@@ -47,21 +47,30 @@ export default function KitchenDashboard() {
       toast(`🆕 New order from Table ${order.tableNumber}!`, "info");
     };
 
-    const handleUpdate = (order) => {
-      setOrders((prev) => {
-        const filtered = prev.filter(
-          (o) => !["served", "completed", "cancelled"].includes(order.orderStatus)
-        );
-        const updated = filtered.map((o) => (o._id === order._id ? order : o));
-        return updated.some((o) => o._id === order._id)
-          ? updated
-          : filtered;
-      });
-      // Remove if served
-      if (["served", "completed"].includes(order.orderStatus)) {
-        setOrders((prev) => prev.filter((o) => o._id !== order._id));
-      }
-    };
+    const handleUpdate = (updatedOrder) => {
+  setOrders((prev) => {
+    // Remove completed/served orders
+    if (
+      ["served", "completed", "cancelled"].includes(
+        updatedOrder.orderStatus
+      )
+    ) {
+      return prev.filter((o) => o._id !== updatedOrder._id);
+    }
+
+    // Update existing order
+    const exists = prev.some((o) => o._id === updatedOrder._id);
+
+    if (exists) {
+      return prev.map((o) =>
+        o._id === updatedOrder._id ? updatedOrder : o
+      );
+    }
+
+    // Add if not exists
+    return [updatedOrder, ...prev];
+  });
+};
 
     socket.on("newOrder", handleNew);
     socket.on("orderUpdated", handleUpdate);
