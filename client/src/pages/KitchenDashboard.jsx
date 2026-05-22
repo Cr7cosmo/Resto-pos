@@ -135,7 +135,7 @@ export default function KitchenDashboard() {
     {/* Grid */}
     <div className="p-3 sm:p-4">
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="flex gap-4 overflow-x-auto pb-4 xl:grid xl:grid-cols-4">
         
         {COLUMNS.map(({ key, label, color }) => {
           const colOrders = orders.filter(
@@ -145,7 +145,7 @@ export default function KitchenDashboard() {
           return (
             <div
               key={key}
-              className={`bg-gray-900 border ${color} rounded-2xl p-3 sm:p-4 min-w-0`}
+              className={`bg-gray-900 border ${color} rounded-2xl p-3 sm:p-4 min-w-[280px] xl:min-w-0 flex-shrink-0`}
             >
               
               {/* Column Header */}
