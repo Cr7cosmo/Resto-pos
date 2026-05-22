@@ -5,7 +5,7 @@ const {
   createMenuItem,
   updateMenuItem,
   deleteMenuItem,
-} = require("../controllers/menuController");
+} = require("../controllers/MenuController");
 const { protect, authorize } = require("../middleware/authMiddleware");
 
 router.get("/", getMenu); // public
