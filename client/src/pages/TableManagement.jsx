@@ -72,7 +72,7 @@ export default function TableManagement() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70" onClick={() => setQrModal(null)}>
           <div className="card p-8 text-center" onClick={(e) => e.stopPropagation()}>
             <h3 className="font-bold text-white text-xl mb-4">Table {qrModal.tableNumber} QR Code</h3>
-            <img src={qrModal.qrCode} alt="QR Code" className="w-64 h-64 mx-auto bg-white p-2 rounded-xl" />
+            <img src={qrModal.qrCode} alt="QR Code" className="hidden md:block w-64 h-64 mx-auto bg-white p-2 rounded-xl" />
             <p className="text-gray-400 text-xs mt-3">Scan to access menu</p>
             <p className="text-gray-600 text-xs mt-1 break-all">/menu/{qrModal._id}</p>
             <button onClick={() => setQrModal(null)} className="btn-ghost mt-4">Close</button>
