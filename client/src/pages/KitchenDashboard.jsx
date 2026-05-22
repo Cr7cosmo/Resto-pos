@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
 
 import { useSocket } from "../context/SocketContext";
 import { useToast } from "../components/Toast";
@@ -40,8 +39,6 @@ export default function KitchenDashboard() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // MOBILE SIDEBAR
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const { socket, connected } = useSocket();
 
@@ -147,83 +144,27 @@ export default function KitchenDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex overflow-hidden">
+  <div className="min-h-screen bg-gray-950 text-white">
 
-      {/* MOBILE OVERLAY */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+    {/* TOP NAVBAR */}
+    <header className="sticky top-0 z-50 bg-gray-900 border-b border-gray-800">
+      <div className="flex items-center justify-between px-4 py-4">
 
-      {/* SIDEBAR */}
-      <aside
-        className={`
-          fixed md:static top-0 left-0 z-50
-          h-full w-64 bg-gray-900 border-r border-gray-800
-          transform transition-transform duration-300
-          ${
-            sidebarOpen
-              ? "translate-x-0"
-              : "-translate-x-full"
-          }
-          md:translate-x-0
-        `}
-      >
-        {/* SIDEBAR HEADER */}
-        <div className="p-4 border-b border-gray-800 flex items-center justify-between">
-          <h2 className="text-xl font-bold">
-            🍽️ RestoPOS
-          </h2>
+        {/* LEFT */}
+        <div>
+          <h1 className="text-2xl font-bold">
+            👨‍🍳 Kitchen Dashboard
+          </h1>
 
-          <button
-            className="md:hidden"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <X size={22} />
-          </button>
+          <p className="text-gray-400 text-sm">
+            {orders.length} active orders
+          </p>
         </div>
 
-        {/* SIDEBAR MENU */}
-        <div className="p-4">
-          <button className="w-full text-left bg-orange-500/20 text-orange-400 px-4 py-3 rounded-xl font-semibold">
-            👨‍🍳 Kitchen
-          </button>
-        </div>
-      </aside>
+        {/* RIGHT */}
+        <div className="flex items-center gap-3">
 
-      {/* MAIN CONTENT */}
-      <main className="flex-1 overflow-hidden">
-
-        {/* TOP BAR */}
-        <div className="p-4 border-b border-gray-800 flex items-center justify-between">
-
-          {/* LEFT */}
-          <div className="flex items-center gap-3">
-
-            {/* HAMBURGER */}
-            <button
-              className="md:hidden"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <Menu size={24} />
-            </button>
-
-            <div>
-              <h1 className="text-2xl font-bold">
-                👨‍🍳 Kitchen Dashboard
-              </h1>
-
-              <p className="text-gray-400 text-sm">
-                {orders.length} active orders
-              </p>
-            </div>
-          </div>
-
-          {/* RIGHT */}
-          <div className="flex items-center gap-3">
-
+          <div className="flex items-center gap-2">
             <div
               className={`w-2 h-2 rounded-full ${
                 connected
@@ -233,75 +174,79 @@ export default function KitchenDashboard() {
             />
 
             <span className="text-gray-400 text-sm hidden sm:block">
-              {connected ? "Live" : "Disconnected"}
+              {connected ? "Live" : "Offline"}
             </span>
+          </div>
 
-            <button
-              onClick={fetchOrders}
-              className="btn-ghost text-sm px-3 py-1.5"
+          <button
+            onClick={fetchOrders}
+            className="bg-gray-800 hover:bg-gray-700 transition px-4 py-2 rounded-xl text-sm"
+          >
+            Refresh
+          </button>
+        </div>
+      </div>
+    </header>
+
+    {/* KANBAN BOARD */}
+    <div className="p-4">
+
+      <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
+
+        {COLUMNS.map(({ key, label, color }) => {
+          const colOrders = orders.filter(
+            (o) => o.orderStatus === key
+          );
+
+          return (
+            <div
+              key={key}
+              className={`
+                snap-start
+                bg-gray-900 border ${color}
+                rounded-2xl p-4
+                min-w-[85vw]
+                sm:min-w-[380px]
+                max-w-[420px]
+                flex-shrink-0
+              `}
             >
-              Refresh
-            </button>
-          </div>
-        </div>
 
-        {/* KANBAN BOARD */}
-        <div className="p-4 overflow-x-auto">
+              {/* COLUMN HEADER */}
+              <div className="flex items-center justify-between mb-4">
 
-          <div className="flex gap-4 min-w-max">
+                <h2 className="font-semibold text-lg">
+                  {label}
+                </h2>
 
-            {COLUMNS.map(({ key, label, color }) => {
-              const colOrders = orders.filter(
-                (o) => o.orderStatus === key
-              );
+                <span className="bg-gray-800 text-gray-400 text-xs rounded-full px-2 py-1">
+                  {colOrders.length}
+                </span>
+              </div>
 
-              return (
-                <div
-                  key={key}
-                  className={`
-                    bg-gray-900 border ${color}
-                    rounded-2xl p-4
-                    min-w-[320px]
-                    max-w-[320px]
-                    flex-shrink-0
-                  `}
-                >
-                  {/* COLUMN HEADER */}
-                  <div className="flex items-center justify-between mb-4">
+              {/* ORDERS */}
+              <div className="space-y-3">
 
-                    <h2 className="font-semibold text-sm sm:text-base">
-                      {label}
-                    </h2>
-
-                    <span className="bg-gray-800 text-gray-400 text-xs rounded-full px-2 py-0.5">
-                      {colOrders.length}
-                    </span>
+                {colOrders.length === 0 ? (
+                  <div className="text-center py-12 text-gray-600">
+                    No orders
                   </div>
-
-                  {/* ORDERS */}
-                  <div className="space-y-3">
-
-                    {colOrders.length === 0 ? (
-                      <p className="text-gray-600 text-sm text-center py-10">
-                        No orders
-                      </p>
-                    ) : (
-                      colOrders.map((order) => (
-                        <OrderCard
-                          key={order._id}
-                          order={order}
-                          showActions
-                          onStatusUpdate={updateStatus}
-                        />
-                      ))
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </main>
+                ) : (
+                  colOrders.map((order) => (
+                    <OrderCard
+                      key={order._id}
+                      order={order}
+                      showActions
+                      onStatusUpdate={updateStatus}
+                    />
+                  ))
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
-  );
+  </div>
+);
 }
