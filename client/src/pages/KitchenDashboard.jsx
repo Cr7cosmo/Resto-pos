@@ -106,11 +106,14 @@ export default function KitchenDashboard() {
       </div>
 
       {/* Kanban columns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {COLUMNS.map(({ key, label, color }) => {
           const colOrders = orders.filter((o) => o.orderStatus === key);
           return (
-            <div key={key} className={`bg-gray-900 border ${color} rounded-2xl p-4`}>
+            <div
+  key={key}
+  className={`bg-gray-900 border ${color} rounded-2xl p-3 sm:p-4 min-w-0`}
+>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-semibold text-white text-sm">{label}</h2>
                 <span className="bg-gray-800 text-gray-400 text-xs rounded-full px-2 py-0.5">{colOrders.length}</span>
