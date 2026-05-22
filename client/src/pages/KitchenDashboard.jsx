@@ -92,44 +92,96 @@ export default function KitchenDashboard() {
   if (loading) return <Loader text="Loading kitchen orders..." />;
 
   return (
-    <div className="min-h-screen bg-gray-950 p-4">
-      <div className="mb-6 flex items-center justify-between">
+  <div className="min-h-screen bg-gray-950 overflow-x-hidden">
+    
+    {/* Header */}
+    <div className="p-3 sm:p-4 border-b border-gray-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        
         <div>
-          <h1 className="text-2xl font-bold text-white">👨‍🍳 Kitchen Dashboard</h1>
-          <p className="text-gray-400 text-sm">{orders.length} active orders</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-white">
+            👨‍🍳 Kitchen Dashboard
+          </h1>
+
+          <p className="text-gray-400 text-sm">
+            {orders.length} active orders
+          </p>
         </div>
-        <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${connected ? "bg-green-500 animate-pulse" : "bg-red-500"}`} />
-          <span className="text-gray-400 text-sm">{connected ? "Live" : "Disconnected"}</span>
-          <button onClick={fetchOrders} className="btn-ghost text-sm px-3 py-1.5 ml-2">Refresh</button>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          
+          <div
+            className={`w-2 h-2 rounded-full ${
+              connected
+                ? "bg-green-500 animate-pulse"
+                : "bg-red-500"
+            }`}
+          />
+
+          <span className="text-gray-400 text-sm">
+            {connected ? "Live" : "Disconnected"}
+          </span>
+
+          <button
+            onClick={fetchOrders}
+            className="btn-ghost text-sm px-3 py-1.5"
+          >
+            Refresh
+          </button>
         </div>
       </div>
+    </div>
 
-      {/* Kanban columns */}
+    {/* Grid */}
+    <div className="p-3 sm:p-4">
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        
         {COLUMNS.map(({ key, label, color }) => {
-          const colOrders = orders.filter((o) => o.orderStatus === key);
+          const colOrders = orders.filter(
+            (o) => o.orderStatus === key
+          );
+
           return (
             <div
-  key={key}
-  className={`bg-gray-900 border ${color} rounded-2xl p-3 sm:p-4 min-w-0`}
->
+              key={key}
+              className={`bg-gray-900 border ${color} rounded-2xl p-3 sm:p-4 min-w-0`}
+            >
+              
+              {/* Column Header */}
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-white text-sm">{label}</h2>
-                <span className="bg-gray-800 text-gray-400 text-xs rounded-full px-2 py-0.5">{colOrders.length}</span>
+                
+                <h2 className="font-semibold text-white text-sm sm:text-base">
+                  {label}
+                </h2>
+
+                <span className="bg-gray-800 text-gray-400 text-xs rounded-full px-2 py-0.5">
+                  {colOrders.length}
+                </span>
               </div>
-              <div className="space-y-3 min-h-32">
-                {colOrders.length === 0
-                  ? <p className="text-gray-600 text-xs text-center py-8">No orders</p>
-                  : colOrders.map((order) => (
-                      <OrderCard key={order._id} order={order} showActions onStatusUpdate={updateStatus} />
-                    ))
-                }
+
+              {/* Orders */}
+              <div className="space-y-3">
+                
+                {colOrders.length === 0 ? (
+                  <p className="text-gray-600 text-xs text-center py-8">
+                    No orders
+                  </p>
+                ) : (
+                  colOrders.map((order) => (
+                    <OrderCard
+                      key={order._id}
+                      order={order}
+                      showActions
+                      onStatusUpdate={updateStatus}
+                    />
+                  ))
+                )}
               </div>
             </div>
           );
         })}
       </div>
     </div>
-  );
-}
+  </div>
+);
